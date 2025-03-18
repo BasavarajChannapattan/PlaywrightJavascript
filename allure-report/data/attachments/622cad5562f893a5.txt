@@ -1,0 +1,160 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: DatePicker
+- Location: D:\Projects\PlaywrightAutomation\tests\DatePicker.spec.js:3:1
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('.react-date-picker__inputGroup')
+    - locator resolved to <div class="react-date-picker__inputGroup">…</div>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - performing click action
+
+    at D:\Projects\PlaywrightAutomation\tests\DatePicker.spec.js:6:56
+```
+
+# Page snapshot
+
+```yaml
+- banner: GREENKART
+- text: "Page size:"
+- combobox "Page size:":
+  - option "5" [selected]
+  - option "10"
+  - option "20"
+- text: "Search:"
+- searchbox "Search:"
+- list "Pagination":
+  - listitem:
+    - button "First" [disabled]
+  - listitem:
+    - button "Previous" [disabled]
+  - listitem:
+    - button "1 (current)"
+  - listitem:
+    - button "2"
+  - listitem:
+    - button "3"
+  - listitem:
+    - button "4"
+  - listitem:
+    - button "Next"
+  - listitem:
+    - button "Last"
+- 'table "Sorted by name: descending order"':
+  - alert: "Sorted by name: descending order"
+  - rowgroup:
+    - 'row "Veg/fruit name: activate to sort column ascending Price: activate to sort column ascending Discount price: activate to sort column ascending"':
+      - 'columnheader "Veg/fruit name: activate to sort column ascending"': Veg/fruit name
+      - 'columnheader "Price: activate to sort column ascending"': Price
+      - 'columnheader "Discount price: activate to sort column ascending"': Discount price
+  - rowgroup:
+    - row "Wheat 67 28":
+      - cell "Wheat"
+      - cell "67"
+      - cell "28"
+    - row "Tomato 37 26":
+      - cell "Tomato"
+      - cell "37"
+      - cell "26"
+    - row "Strawberry 23 15":
+      - cell "Strawberry"
+      - cell "23"
+      - cell "15"
+    - row "Rice 37 46":
+      - cell "Rice"
+      - cell "37"
+      - cell "46"
+    - row "Potato 34 22":
+      - cell "Potato"
+      - cell "34"
+      - cell "22"
+- text: Delivery Date 0
+- spinbutton: "3"
+- text: /
+- spinbutton: "17"
+- text: /
+- spinbutton: "2025"
+- button:
+  - img
+- button:
+  - img
+```
+
+# Test source
+
+```ts
+   1 | const { test, expect } = require("@playwright/test");
+   2 |
+   3 | test("DatePicker", async ({ page }) => {
+   4 |   await page.goto("https://rahulshettyacademy.com/seleniumPractise/#/offers");
+   5 |
+>  6 |   await page.locator(".react-date-picker__inputGroup").click();
+     |                                                        ^ Error: locator.click: Test timeout of 30000ms exceeded.
+   7 |   await page.locator(".react-calendar__navigation__label__labelText").click();
+   8 |   await page.locator(".react-calendar__navigation__label__labelText").click();
+   9 |   await page.getByText(year).click();
+  10 |   await page.locator("");
+  11 |
+  12 |   await page
+  13 |     .locator(".react-calendar__tile")
+  14 |     .nth(Number(month) - 1)
+  15 |     .click();
+  16 |
+  17 |   await page.locator("//abbr[text()='" + date + "']").click();
+  18 | });
+  19 |
+  20 | test("Calender", async ({ page }) => {
+  21 |   const month = "December";
+  22 |   const year = "2027";
+  23 |
+  24 |   await page.goto("https://jqueryui.com/datepicker/");
+  25 |   const frame = page.frameLocator("iframe[class='demo-frame']");
+  26 |   await frame.locator("#datepicker").click();
+  27 |
+  28 |   while (true) {
+  29 |     const currentMonth = await frame
+  30 |       .locator(".ui-datepicker-month")
+  31 |       .textContent();
+  32 |     const currentYear = await frame
+  33 |       .locator(".ui-datepicker-year")
+  34 |       .textContent();
+  35 |     if (currentMonth == month && currentYear == year) {
+  36 |       break;
+  37 |     }
+  38 |     await frame.locator(".ui-icon-circle-triangle-e").click();
+  39 |   }
+  40 | });
+  41 |
+  42 | test("baseWeb", async ({ page }) => {
+  43 |   const monthYear = "December, 2027";
+  44 |
+  45 |   await page.goto("https://air-datepicker.com/");
+  46 |   while (true) {
+  47 |     const currentMonthYear = await page
+  48 |       .locator(".air-datepicker-nav--title")
+  49 |       .textContent();
+  50 |     console.log(currentMonthYear);
+  51 |
+  52 |     if (currentMonthYear.trim() === monthYear) {
+  53 |       break;
+  54 |     } else {
+  55 |       await page.locator("[data-action='next']").click();
+  56 |     }
+  57 |   }
+  58 | });
+  59 |
+```

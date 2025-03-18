@@ -1,0 +1,71 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: API Login and UI Test >> Login via API and perform UI actions
+- Location: D:\Projects\PlaywrightAutomation\tests\WebApiTestPart1.spec.js:6:7
+
+# Error details
+
+```
+Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 404
+    at D:\Projects\PlaywrightAutomation\tests\WebApiTestPart1.spec.js:19:31
+```
+
+# Test source
+
+```ts
+   1 | // Import Playwright Test
+   2 | import { expect, test, page } from "@playwright/test";
+   3 |
+   4 | // Test Suite
+   5 | test.describe("API Login and UI Test", () => {
+   6 |   test("Login via API and perform UI actions", async ({ page }) => {
+   7 |     // Step 1: Perform API Login
+   8 |     const response = await page.request.post(
+   9 |       "https://automationexercise.com/api/login",
+  10 |       {
+  11 |         data: {
+  12 |           email: "lawaf55183@dmener.com",
+  13 |           password: "Abcd1234!",
+  14 |         },
+  15 |       }
+  16 |     );
+  17 |
+  18 |     // Check if the login was successful
+> 19 |     expect(response.status()).toBe(200);
+     |                               ^ Error: expect(received).toBe(expected) // Object.is equality
+  20 |     const responseData = await response.json();
+  21 |     const token = responseData.token;
+  22 |     expect(token).toBeDefined();
+  23 |
+  24 |     // Step 2: Use the token in UI
+  25 |     await page.context().addCookies([
+  26 |       {
+  27 |         name: "auth_token",
+  28 |         value: token,
+  29 |         domain: "automationexercise.com",
+  30 |         path: "/",
+  31 |         httpOnly: true,
+  32 |         secure: true,
+  33 |         sameSite: "Lax",
+  34 |       },
+  35 |     ]);
+  36 |
+  37 |     // Step 3: Navigate to the website
+  38 |     await page.goto("https://automationexercise.com");
+  39 |
+  40 |     // Verify user is logged in
+  41 |     await expect(page.locator('a[href="/logout"]')).toBeVisible();
+  42 |     console.log("✅ Successfully logged in via API and verified in UI!");
+  43 |   });
+  44 | });
+  45 |
+```

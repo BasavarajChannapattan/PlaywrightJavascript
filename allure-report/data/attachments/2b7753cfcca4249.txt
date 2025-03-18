@@ -1,0 +1,74 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Add Item To cart
+- Location: D:\Projects\PlaywrightAutomation\tests\login.spec.js:63:5
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('#login-button')
+    - locator resolved to <input type="submit" value="Login" id="login-button" name="login-button" data-test="login-button" class="submit-button btn_action"/>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - performing click action
+
+    at LoginPage.login (D:\Projects\PlaywrightAutomation\pages\LoginPage.js:24:28)
+    at D:\Projects\PlaywrightAutomation\tests\login.spec.js:53:3
+```
+
+# Page snapshot
+
+```yaml
+- text: Swag Labs
+- textbox "Username": standard_user
+- textbox "Password": secret_sauce
+- button "Login"
+- heading "Accepted usernames are:" [level=4]
+- text: standard_user locked_out_user problem_user performance_glitch_user error_user visual_user
+- heading "Password for all users:" [level=4]
+- text: secret_sauce
+```
+
+# Test source
+
+```ts
+   1 | import { BasePage } from "./basePage.js";
+   2 | export class LoginPage extends BasePage {
+   3 |   constructor(page) {
+   4 |     super(page);
+   5 |     this.page = page;
+   6 |     this.usernameInput = page.locator("[placeholder='Username']");
+   7 |     this.passwordInput = page.locator("[placeholder='Password']");
+   8 |     this.loginButton = page.locator("#login-button");
+   9 |   }
+  10 |
+  11 |   async goto() {
+  12 |     await this.page.goto("https://www.saucedemo.com/");
+  13 |   }
+  14 |
+  15 |   async isLoginPageVisible() {
+  16 |     await this.usernameInput.isVisible();
+  17 |     await this.passwordInput.isVisible();
+  18 |     await this.loginButton.isEnabled();
+  19 |   }
+  20 |
+  21 |   async login(username, password) {
+  22 |     await this.usernameInput.fill(username);
+  23 |     await this.passwordInput.fill(password);
+> 24 |     await this.loginButton.click();
+     |                            ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  25 |   }
+  26 | }
+  27 |
+```

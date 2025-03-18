@@ -1,0 +1,29 @@
+{
+  "name": "playwrightautomation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "smokeTest": "npx playwright test --grep @smoke",
+    "regression": "npx playwright test",
+    "chromeBrowserTest": " npx playwright test Popups.spec.js  --config playwright.config.js project=chrome",
+    "firefoxBrowserTest": " npx playwright test Popups.spec.js --config playwright.config.js project=firefox",
+    "webkitBrowserTest": " npx playwright test Popups.spec.js --config playwright.config.js project=webkit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "@types/node": "^22.13.10",
+    "allure-playwright": "^3.2.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "axios": "^1.8.3",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}

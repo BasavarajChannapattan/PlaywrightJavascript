@@ -1,0 +1,93 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: @smoke Visual Testing
+- Location: D:\Projects\PlaywrightAutomation\tests\Popups.spec.js:18:5
+
+# Error details
+
+```
+Error: expect(Buffer).toMatchSnapshot(expected)
+
+  398 pixels (ratio 0.01 of all image pixels) are different.
+
+Expected: D:\Projects\PlaywrightAutomation\tests\Popups.spec.js-snapshots\landed-win32.png
+Received: D:\Projects\PlaywrightAutomation\test-results\Popups--smoke-Visual-Testing\landed-actual.png
+    Diff: D:\Projects\PlaywrightAutomation\test-results\Popups--smoke-Visual-Testing\landed-diff.png
+
+    at D:\Projects\PlaywrightAutomation\tests\Popups.spec.js:20:35
+```
+
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "About"
+  - link "Store"
+  - link "Gmail"
+  - link "Search for Images": Images
+  - button "Google apps":
+    - img
+  - link "Sign in"
+- img "Google"
+- search:
+  - img
+  - combobox "Search"
+  - button "Search by voice":
+    - img
+  - button "Search by image":
+    - img
+  - button "Google Search"
+  - button "I'm Feeling Lucky"
+- text: "Google offered in:"
+- link "हिन्दी"
+- link "বাংলা"
+- link "తెలుగు"
+- link "मराठी"
+- link "தமிழ்"
+- link "ગુજરાતી"
+- link "ಕನ್ನಡ"
+- link "മലയാളം"
+- link "ਪੰਜਾਬੀ"
+- contentinfo:
+  - text: India
+  - link "Advertising"
+  - link "Business"
+  - link "How Search works"
+  - link "Privacy"
+  - link "Terms"
+  - button "Settings"
+```
+
+# Test source
+
+```ts
+   1 | import { expect, test, page } from "@playwright/test";
+   2 |
+   3 | //test.describe.configure({ mode: "parallel" });
+   4 | test("Pop-Up validation", async ({ page }) => {
+   5 |   await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
+   6 |   await expect(page.locator("#displayed-text")).toBeVisible();
+   7 |   await page.locator("#hide-textbox").click();
+   8 |   await expect(page.locator("#displayed-text")).toBeHidden();
+   9 |
+  10 |   //handling dailogs or alert pop-ups
+  11 |   page.on("dialog", (dailog) => dailog.accept());
+  12 |   await page.locator("#confirmbtn").click();
+  13 |
+  14 |   //handling mouse over in playwright
+  15 |   await page.locator("#mousehover").hover();
+  16 | });
+  17 |
+  18 | test("@smoke Visual Testing", async ({ page }) => {
+  19 |   await page.goto("https://google.com");
+> 20 |   expect(await page.screenshot()).toMatchSnapshot("landed.png");
+     |                                   ^ Error: expect(Buffer).toMatchSnapshot(expected)
+  21 | });
+  22 |
+```

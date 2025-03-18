@@ -1,0 +1,312 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Calender
+- Location: D:\Projects\PlaywrightAutomation\tests\DatePicker.spec.js:20:1
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('iframe[class=\'demo-frame\']').contentFrame().locator('#datepicker')
+    - locator resolved to <input type="text" id="datepicker" class="hasDatepicker"/>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - performing click action
+
+    at D:\Projects\PlaywrightAutomation\tests\DatePicker.spec.js:26:38
+```
+
+# Page snapshot
+
+```yaml
+- banner:
+  - navigation:
+    - list:
+      - listitem:
+        - link "jQuery"
+      - listitem:
+        - link "jQuery UI"
+      - listitem:
+        - link "jQuery Mobile"
+      - listitem:
+        - link "Sizzle"
+      - listitem:
+        - link "QUnit"
+    - list:
+      - listitem:
+        - link "Plugins"
+      - listitem:
+        - link "Contribute"
+      - listitem:
+        - link "Events"
+      - listitem:
+        - link "Support"
+      - listitem:
+        - link "OpenJS Foundation"
+- heading "jQuery UI" [level=2]:
+  - link "jQuery UI"
+- navigation:
+  - menu "Navigation":
+    - listitem:
+      - link "Demos"
+    - listitem:
+      - link "Download"
+    - listitem:
+      - link "API Documentation"
+    - listitem:
+      - link "Themes"
+    - listitem:
+      - link "Development"
+    - listitem:
+      - link "Support"
+    - listitem:
+      - link "Blog"
+    - listitem:
+      - link "About"
+  - search:
+    - searchbox "Search jQuery UI"
+    - button
+    - text: /
+- heading "Datepicker" [level=1]
+- separator
+- paragraph: Select a date from a popup or inline calendar
+- heading "Examples" [level=2]
+- list:
+  - listitem:
+    - link "Default functionality"
+  - listitem:
+    - link "Animations"
+  - listitem:
+    - link "Dates in other months"
+  - listitem:
+    - link "Display button bar"
+  - listitem:
+    - link "Display inline"
+  - listitem:
+    - link "Display month & year menus"
+  - listitem:
+    - link "Display multiple months"
+  - listitem:
+    - link "Format date"
+  - listitem:
+    - link "Icon trigger"
+  - listitem:
+    - link "Localize calendar"
+  - listitem:
+    - link "Populate alternate field"
+  - listitem:
+    - link "Restrict date range"
+  - listitem:
+    - link "Select a Date Range"
+  - listitem:
+    - link "Show week of the year"
+- paragraph: The datepicker is tied to a standard form input field. Focus on the input (click, or use the tab key) to open an interactive calendar in a small overlay. Choose a date, click elsewhere on the page (blur the input), or hit the Esc key to close. If a date is chosen, feedback is shown as the input's value.
+- text:  view source
+- paragraph:
+  - text: Want to learn more about the datepicker widget? Check out the
+  - link "API documentation"
+  - text: .
+- complementary:
+  - complementary:
+    - heading "Interactions" [level=3]
+    - list:
+      - listitem:
+        - link "Draggable"
+      - listitem:
+        - link "Droppable"
+      - listitem:
+        - link "Resizable"
+      - listitem:
+        - link "Selectable"
+      - listitem:
+        - link "Sortable"
+  - complementary:
+    - heading "Widgets" [level=3]
+    - list:
+      - listitem:
+        - link "Accordion"
+      - listitem:
+        - link "Autocomplete"
+      - listitem:
+        - link "Button"
+      - listitem:
+        - link "Checkboxradio"
+      - listitem:
+        - link "Controlgroup"
+      - listitem:
+        - link "Datepicker"
+      - listitem:
+        - link "Dialog"
+      - listitem:
+        - link "Menu"
+      - listitem:
+        - link "Progressbar"
+      - listitem:
+        - link "Selectmenu"
+      - listitem:
+        - link "Slider"
+      - listitem:
+        - link "Spinner"
+      - listitem:
+        - link "Tabs"
+      - listitem:
+        - link "Tooltip"
+  - complementary:
+    - heading "Effects" [level=3]
+    - list:
+      - listitem:
+        - link "Add Class"
+      - listitem:
+        - link "Color Animation"
+      - listitem:
+        - link "Easing"
+      - listitem:
+        - link "Effect"
+      - listitem:
+        - link "Hide"
+      - listitem:
+        - link "Remove Class"
+      - listitem:
+        - link "Show"
+      - listitem:
+        - link "Switch Class"
+      - listitem:
+        - link "Toggle"
+      - listitem:
+        - link "Toggle Class"
+  - complementary:
+    - heading "Utilities" [level=3]
+    - list:
+      - listitem:
+        - link "Position"
+      - listitem:
+        - link "Widget Factory"
+- contentinfo:
+  - heading "Books" [level=3]
+  - list:
+    - listitem:
+      - link "jQuery UI in Action by TJ VanToll jQuery UI in Action TJ VanToll":
+        - img "jQuery UI in Action by TJ VanToll"
+        - strong: jQuery UI in Action
+        - text: TJ VanToll
+    - listitem:
+      - link "jQuery UI Themes by Adam Boduch jQuery UI Themes Adam Boduch":
+        - img "jQuery UI Themes by Adam Boduch"
+        - text: jQuery UI Themes Adam Boduch
+    - listitem:
+      - link "jQuery UI Cookbook by Adam Boduch jQuery UI Cookbook Adam Boduch":
+        - img "jQuery UI Cookbook by Adam Boduch"
+        - text: jQuery UI Cookbook Adam Boduch
+  - list:
+    - listitem:
+      - link " Learning Center"
+    - listitem:
+      - link " Chat"
+    - listitem:
+      - link " Twitter"
+    - listitem:
+      - link " GitHub"
+  - paragraph:
+    - text: Copyright 2025
+    - link "OpenJS Foundation"
+    - text: and jQuery contributors. All rights reserved. See
+    - link "jQuery License"
+    - text: for more information. The
+    - link "OpenJS Foundation"
+    - text: has registered trademarks and uses trademarks. For a list of trademarks of the
+    - link "OpenJS Foundation"
+    - text: ", please see our"
+    - link "Trademark Policy"
+    - text: and
+    - link "Trademark List"
+    - text: . Trademarks and logos not indicated on the
+    - link "list of OpenJS Foundation trademarks"
+    - text: are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. OpenJS Foundation
+    - link "Terms of Use"
+    - text: ","
+    - link "Privacy"
+    - text: ", and"
+    - link "Cookie"
+    - text: Policies also apply.
+  - paragraph:
+    - link "Web hosting by Digital Ocean"
+    - text: "|"
+    - link "CDN by Fastly"
+    - text: "|"
+    - link "Powered by WordPress"
+```
+
+# Test source
+
+```ts
+   1 | const { test, expect } = require("@playwright/test");
+   2 |
+   3 | test("DatePicker", async ({ page }) => {
+   4 |   await page.goto("https://rahulshettyacademy.com/seleniumPractise/#/offers");
+   5 |
+   6 |   await page.locator(".react-date-picker__inputGroup").click();
+   7 |   await page.locator(".react-calendar__navigation__label__labelText").click();
+   8 |   await page.locator(".react-calendar__navigation__label__labelText").click();
+   9 |   await page.getByText(year).click();
+  10 |   await page.locator("");
+  11 |
+  12 |   await page
+  13 |     .locator(".react-calendar__tile")
+  14 |     .nth(Number(month) - 1)
+  15 |     .click();
+  16 |
+  17 |   await page.locator("//abbr[text()='" + date + "']").click();
+  18 | });
+  19 |
+  20 | test("Calender", async ({ page }) => {
+  21 |   const month = "December";
+  22 |   const year = "2027";
+  23 |
+  24 |   await page.goto("https://jqueryui.com/datepicker/");
+  25 |   const frame = page.frameLocator("iframe[class='demo-frame']");
+> 26 |   await frame.locator("#datepicker").click();
+     |                                      ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  27 |
+  28 |   while (true) {
+  29 |     const currentMonth = await frame
+  30 |       .locator(".ui-datepicker-month")
+  31 |       .textContent();
+  32 |     const currentYear = await frame
+  33 |       .locator(".ui-datepicker-year")
+  34 |       .textContent();
+  35 |     if (currentMonth == month && currentYear == year) {
+  36 |       break;
+  37 |     }
+  38 |     await frame.locator(".ui-icon-circle-triangle-e").click();
+  39 |   }
+  40 | });
+  41 |
+  42 | test("baseWeb", async ({ page }) => {
+  43 |   const monthYear = "December, 2027";
+  44 |
+  45 |   await page.goto("https://air-datepicker.com/");
+  46 |   while (true) {
+  47 |     const currentMonthYear = await page
+  48 |       .locator(".air-datepicker-nav--title")
+  49 |       .textContent();
+  50 |     console.log(currentMonthYear);
+  51 |
+  52 |     if (currentMonthYear.trim() === monthYear) {
+  53 |       break;
+  54 |     } else {
+  55 |       await page.locator("[data-action='next']").click();
+  56 |     }
+  57 |   }
+  58 | });
+  59 |
+```

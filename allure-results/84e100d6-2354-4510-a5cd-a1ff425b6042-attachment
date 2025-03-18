@@ -1,0 +1,126 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: @Client App login
+- Location: D:\Projects\PlaywrightAutomation\tests\e2e.spec.js:2:1
+
+# Error details
+
+```
+Error: page.goto: Test timeout of 30000ms exceeded.
+Call log:
+  - navigating to "https://rahulshettyacademy.com/client", waiting until "load"
+
+    at D:\Projects\PlaywrightAutomation\tests\e2e.spec.js:7:14
+```
+
+# Page snapshot
+
+```yaml
+- banner:
+  - text: Ecom
+  - link " dummywebsite@rahulshettyacademy.com"
+  - link ""
+  - link ""
+  - link ""
+  - link ""
+- heading "We Make Your Shopping Simple" [level=3]
+- heading "Practice Website for Rahul Shetty Academy Students" [level=1]:
+  - text: Practice Website for
+  - emphasis: Rahul Shetty Academy
+  - text: Students
+- link "Register"
+- paragraph: Register to sign in with your personal account
+- heading "Log in" [level=1]
+- text: Email
+- textbox "email@example.com"
+- text: Password
+- textbox "enter your passsword"
+- button "Login"
+- link "Forgot password?"
+- paragraph: Don't have an account? Register here
+- heading "Why People Choose Us?" [level=1]
+- text: 
+- heading "3546540" [level=1]
+- paragraph: Successfull Orders
+- text: 
+- heading "37653" [level=1]
+- paragraph: Customers
+- text: 
+- heading "3243" [level=1]
+- paragraph: Sellers
+- text: 
+- heading "4500+" [level=1]
+- paragraph: Daily Orders
+- text: 
+- heading "500+" [level=1]
+- paragraph: Daily New Customer Joining
+```
+
+# Test source
+
+```ts
+   1 | const { test, expect } = require("@playwright/test");
+   2 | test("@Client App login", async ({ page }) => {
+   3 |   //js file- Login js, DashboardPage
+   4 |   const email = "anshika@gmail.com";
+   5 |   const productName = "zara coat 3";
+   6 |   const products = page.locator(".card-body");
+>  7 |   await page.goto("https://rahulshettyacademy.com/client");
+     |              ^ Error: page.goto: Test timeout of 30000ms exceeded.
+   8 |   await page.goForward();
+   9 |   await page.locator("#userEmail").fill(email);
+  10 |   await page.locator("#userPassword").type("Iamking@000");
+  11 |   await page.locator("[value='Login']").click();
+  12 |   await page.waitForLoadState("networkidle");
+  13 |   const titles = await page.locator(".card-body b").allTextContents();
+  14 |   console.log(titles);
+  15 |   const count = await products.count();
+  16 |   for (let i = 0; i < count; ++i) {
+  17 |     if ((await products.nth(i).locator("b").textContent()) === productName) {
+  18 |       //add to cart
+  19 |       await products.nth(i).locator("text= Add To Cart").click();
+  20 |       break;
+  21 |     }
+  22 |   }
+  23 |
+  24 |   await page.locator("[routerlink*='cart']").click();
+  25 |   //await page.pause();
+  26 |
+  27 |   await page.locator("div li").first().waitFor();
+  28 |   const bool = await page.locator("h3:has-text('zara coat 3')").isVisible();
+  29 |   expect(bool).toBeTruthy();
+  30 |   await page.locator("text=Checkout").click();
+  31 |
+  32 |   await page.locator("[placeholder*='Country']").type("ind");
+  33 |
+  34 |   const dropdown = page.locator(".ta-results");
+  35 |   await dropdown.waitFor();
+  36 |   const optionsCount = await dropdown.locator("button").count();
+  37 |   for (let i = 0; i < optionsCount; ++i) {
+  38 |     const text = await dropdown.locator("button").nth(i).textContent();
+  39 |     if (text === " India") {
+  40 |       await dropdown.locator("button").nth(i).click();
+  41 |       break;
+  42 |     }
+  43 |   }
+  44 |
+  45 |   await expect(page.locator(".user__name [type='text']").first()).toHaveText(
+  46 |     email
+  47 |   );
+  48 |   await page.locator(".action__submit").click();
+  49 |   await expect(page.locator(".hero-primary")).toHaveText(
+  50 |     " Thankyou for the order. "
+  51 |   );
+  52 |   const orderId = await page
+  53 |     .locator(".em-spacer-1 .ng-star-inserted")
+  54 |     .textContent();
+  55 |   console.log(orderId);
+  56 | });
+  57 |
+```
