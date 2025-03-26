@@ -99,6 +99,21 @@
   allure generate ./allure-results --clean
   ```
 - Opened reports using:
+
   ```sh
   allure open ./allure-report
   ```
+
+  ## Playwright devops solution using AZURE DEVOPS
+
+  -- Inroduction about azure cloud
+  -- created azure cloud free account
+  -- run the tests parallel in azure cloud
+
+install all the dependecies related to azure playwright
+
+npm init @azure/microsoft-playwright-testing
+az login
+npx playwright test --config=playwright.service.config.ts --workers=20
+
+https://playwright.microsoft.com/workspaces/westeurope_179b5264-5bce-455b-80eb-f2201b400a38
