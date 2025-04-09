@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Node.js
@@ -24,26 +24,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Browsers
+      - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: npx playwright test --reporter=html
+      - name: Run Playwright Cucumber tests
+        run: |
+          npx cucumber-js \
+            --require-module ts-node/register \
+            --require tests/steps/**/*.ts \
+            tests/features/**/*.feature
 
       - name: Upload Playwright HTML report
-        uses: actions/upload-artifact@v2
         if: always()
+        uses: actions/upload-artifact@2e2a7c2f09e8c92c1e2b1c62dff96dcdfc6c7606 # v3.1.2 SHA
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
-      - name: Notify Teams on Failure
-        if: failure()
-        run: |
-          curl -H 'Content-Type: application/json' \
-               -d '{
-                 "title": "🚨 Playwright Tests Failed",
-                 "text": "Some Playwright tests failed in GitHub Actions. [View Run]('${{ github.run_url }}')"
-               }' \
-               ${{ secrets.TEAMS_WEBHOOK_URL }}
