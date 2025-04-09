@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "fs";
+
+//how to upload a file using playwright?
 test("File Upload Test", async ({ page }) => {
   await page.goto("https://www.file.io/"); // Example file upload site
 

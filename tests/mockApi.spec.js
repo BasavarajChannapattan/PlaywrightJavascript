@@ -1,7 +1,7 @@
 import { chromium, page, test, expect } from "@playwright/test";
 
 test("Intercepting apis", async () => {
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch();
   const page = await browser.newPage();
 
   await page.route("https://reqres.in/api/users/2", async (route) => {
