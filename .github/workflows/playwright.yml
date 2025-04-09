@@ -31,9 +31,19 @@ jobs:
         run: npx playwright test --reporter=html
 
       - name: Upload Playwright HTML report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         if: always()
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Notify Teams on Failure
+        if: failure()
+        run: |
+          curl -H 'Content-Type: application/json' \
+               -d '{
+                 "title": "🚨 Playwright Tests Failed",
+                 "text": "Some Playwright tests failed in GitHub Actions. [View Run]('${{ github.run_url }}')"
+               }' \
+               ${{ secrets.TEAMS_WEBHOOK_URL }}
