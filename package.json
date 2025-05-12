@@ -8,22 +8,33 @@
     "regression": "npx playwright test",
     "chromeBrowserTest": " npx playwright test Popups.spec.js  --config playwright.config.js project=chrome",
     "firefoxBrowserTest": " npx playwright test Popups.spec.js --config playwright.config.js project=firefox",
-    "webkitBrowserTest": " npx playwright test Popups.spec.js --config playwright.config.js project=webkit"
+    "webkitBrowserTest": " npx playwright test Popups.spec.js --config playwright.config.js project=webkit",
+    "test:cucumber": "cucumber-js --tags @smoke",
+    "test:regression": "cucumber-js --tags @regression",
+    "cucumber": "cucumber-js --require-module ts-node/register --require 'features/**/*.ts'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "@cucumber/pretty-formatter": "^1.0.1",
     "@playwright/test": "^1.51.0",
-    "@types/node": "^22.13.10",
+    "@types/cucumber": "^6.0.1",
+    "@types/node": "^22.15.17",
     "allure-playwright": "^3.2.0",
-    "typescript": "^5.8.2"
+    "cucumber": "^6.0.7",
+    "cucumber-junit": "^1.7.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@cucumber/cucumber": "^11.2.0",
     "axios": "^1.8.3",
+    "cucumber-pretty": "^6.0.1",
     "fs": "^0.0.1-security",
+    "json-server": "^1.0.0-beta.3",
+    "json-server-auth": "^2.1.0",
     "path": "^0.12.7"
   }
 }

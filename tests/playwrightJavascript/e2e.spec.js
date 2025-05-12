@@ -22,15 +22,11 @@ test("@Client App login", async ({ page }) => {
   }
 
   await page.locator("[routerlink*='cart']").click();
-  //await page.pause();
-
   await page.locator("div li").first().waitFor();
   const bool = await page.locator("h3:has-text('zara coat 3')").isVisible();
   expect(bool).toBeTruthy();
   await page.locator("text=Checkout").click();
-
   await page.locator("[placeholder*='Country']").type("ind");
-
   const dropdown = page.locator(".ta-results");
   await dropdown.waitFor();
   const optionsCount = await dropdown.locator("button").count();

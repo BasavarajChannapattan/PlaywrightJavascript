@@ -1,0 +1,393 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "user-login-functionality;successful-login-with-valid-credentials",
+        "keyword": "Scenario",
+        "line": 4,
+        "name": "Successful login with valid credentials",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2305645900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "I am on the login page",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 616879799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 6,
+            "name": "I enter valid username and password",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:22"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 32819599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 7,
+            "name": "I click the login button",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 74823299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 8,
+            "name": "I should be logged in successfully",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:48"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13591000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 768057300
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@smoke",
+            "line": 3
+          },
+          {
+            "name": "@regression",
+            "line": 3
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "user-login-functionality;login-with-different-user-types",
+        "keyword": "Scenario Outline",
+        "line": 20,
+        "name": "Login with different user types",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2638482600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "I am on the login page",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 598883099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "I enter \"standard_user\" as username",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17179400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "I enter \"secret_sauce\" as password",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9686400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I click the login button",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 58050200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should see \"successful login\"",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:53"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 5307699,
+              "error_message": "TypeError: Cannot read properties of undefined (reading 'locator')\n    at CustomWorld.<anonymous> (D:\\Projects\\PlaywrightJavascript\\tests\\step-definitions\\login.step.ts:59:34)"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 726457800
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@regression",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "user-login-functionality;login-with-different-user-types",
+        "keyword": "Scenario Outline",
+        "line": 21,
+        "name": "Login with different user types",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1912905999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "I am on the login page",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 485336100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "I enter \"locked_out_user\" as username",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17347700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "I enter \"secret_sauce\" as password",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11798200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I click the login button",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 53631799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should see \"user is locked out\"",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4602299
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 822812399
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@regression",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "user-login-functionality;login-with-different-user-types",
+        "keyword": "Scenario Outline",
+        "line": 22,
+        "name": "Login with different user types",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1436538399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "I am on the login page",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 430740200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "I enter \"invalid_user\" as username",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17076900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "I enter \"invalid_pass\" as password",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9847600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I click the login button",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49721400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should see \"invalid credentials\"",
+            "match": {
+              "location": "tests\\step-definitions\\login.step.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3146099
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 693959100
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@regression",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "user-login-functionality",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "User login functionality",
+    "tags": [],
+    "uri": "tests\\features\\login_standard_user.feature"
+  }
+]
