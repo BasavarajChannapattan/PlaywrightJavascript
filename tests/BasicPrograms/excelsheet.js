@@ -1,146 +1,144 @@
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("Sundaragolisu")
+    .addItem("Beautify List", "formatWordStyleList")
+    .addSeparator()
+    .addItem("Spell & Grammar Check", "checkSpellingGrammar")
+    .addSeparator()
+    .addSubMenu(
+      SpreadsheetApp.getUi()
+        .createMenu("Automation")
+        .addItem("Setup Weekly Triggers", "setupAutomationTriggers")
+        .addItem("Remove All Triggers", "removeAllTriggers")
+        .addSeparator()
+        .addItem("Show Current Triggers", "showTriggers")
+    )
+    .addToUi();
+}
+
+// Add these new functions
+function removeAllTriggers() {
+  ScriptApp.getProjectTriggers().forEach((trigger) =>
+    ScriptApp.deleteTrigger(trigger)
+  );
+  Logger.log("All triggers removed successfully");
+  SpreadsheetApp.getActive().toast("All automation triggers have been removed");
+}
+
+function showTriggers() {
+  const triggers = ScriptApp.getProjectTriggers();
+  const ui = SpreadsheetApp.getUi();
+
+  if (triggers.length === 0) {
+    ui.alert(
+      "No Triggers",
+      "No automation triggers are currently set up.",
+      ui.ButtonSet.OK
+    );
+    return;
+  }
+
+  const triggerInfo = triggers
+    .map((trigger) => {
+      const functionName = trigger.getHandlerFunction();
+      const eventType = trigger.getEventType();
+
+      let triggerTime = "";
+      try {
+        // Get trigger timing info if available
+        const eventTime = trigger.getTriggerSource();
+        triggerTime = `Runs: ${eventTime}`;
+      } catch (e) {
+        triggerTime = "Timing: Not available";
+      }
+
+      return `Function: ${functionName}
+Type: ${eventType}
+${triggerTime}`;
+    })
+    .join("\n\n");
+
+  ui.alert("Current Triggers", triggerInfo, ui.ButtonSet.OK);
+}
+
+function readTeamConfig() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const configSheet = ss.getSheetByName("TeamConfig");
+
+  if (!configSheet) {
+    Logger.log("TeamConfig sheet not found");
+    return {};
+  }
+
+  const data = configSheet.getDataRange().getValues();
+  const teamConfig = {};
+  let managers = [];
+
+  // Skip header row
+  for (let i = 1; i < data.length; i++) {
+    const [teamName, emails] = data[i];
+    if (teamName && emails) {
+      if (teamName.trim() === "Manager") {
+        managers = emails.split(",").map((email) => email.trim());
+      } else {
+        teamConfig[teamName] = {
+          members: emails.split(",").map((email) => email.trim()),
+        };
+      }
+    }
+  }
+
+  // Add managers to all teams
+  Object.keys(teamConfig).forEach((team) => {
+    teamConfig[team].managers = managers;
+  });
+
+  return teamConfig;
+}
+
 function checkEmptyCellsAndNotify() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const emptyCellsInfo = checkEmptyCellsForTeams(sheet);
 
-  const currentHour = new Date().getHours();
-  const currentDay = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 5 = Friday
+  Logger.log("Checking empty cells...");
 
-  // Monday 10 PM: Only notify managers/leads
-  if (currentDay === 1 && currentHour === 22) {
-    for (let team in emptyCellsInfo) {
-      if (emptyCellsInfo[team].length > 0) {
-        sendFinalReminderToManagers(team, emptyCellsInfo[team]);
-      }
-    }
-  } else {
-    // Other times: notify team members
-    for (let team in emptyCellsInfo) {
-      if (emptyCellsInfo[team].length > 0) {
-        sendEmailToTeam(team, emptyCellsInfo[team]);
-      }
+  // Force notifications for testing
+  for (let team in emptyCellsInfo) {
+    if (emptyCellsInfo[team].length > 0) {
+      // Test team notification
+      sendEmailToTeam(team, emptyCellsInfo[team]);
+      // Test manager notification
+      sendFinalReminderToManagers(team, emptyCellsInfo[team]);
     }
   }
 
-  // If all cells are filled, perform the weekly rollover and send email to Pallav
-  if (Object.values(emptyCellsInfo).every((info) => info.length === 0)) {
-    rollSheetAndSendEmail();
-  }
+  Logger.log("Test notifications sent for any empty cells");
 }
 
 function checkEmptyCellsForTeams(sheet) {
-  const teams = [
-    "Platform Services",
-    "Technodrome - Datadog",
-    "Telemetry",
-    "Manual_SDK",
-    "Cloud_Extension",
-    "SDK_CPP",
-    "SDK_Unreal",
-    "SDK_Unity",
-    "API_Gateway",
-    "Portal",
-  ];
+  const teamConfig = readTeamConfig();
+  const teams = Object.keys(teamConfig).filter((team) => team !== "Manager");
   const emptyCellsInfo = {};
+
+  Logger.log("Checking for empty status cells...");
 
   teams.forEach((team, index) => {
     const row = index + 2;
-    const cell = sheet.getRange(row, 2).getValue(); // Column B
-    if (!cell || cell.toString().trim() === "") {
+    const cell = sheet.getRange(row, 2).getValue();
+
+    if (
+      !cell ||
+      cell.toString().trim() === "" ||
+      cell === null ||
+      cell === undefined
+    ) {
       if (!emptyCellsInfo[team]) emptyCellsInfo[team] = [];
       emptyCellsInfo[team].push(`Row ${row}`);
+      Logger.log(`Found empty cell for ${team}`);
     }
   });
 
   return emptyCellsInfo;
-}
-
-function sendEmailToTeam(team, emptyInfo) {
-  const teamEmails = getTeamMembers(team);
-  const spreadsheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
-
-  const subject = `Reminder: ${team} team has missing status updates`;
-  const body =
-    `Hi ${team} team,\n\n` +
-    `The following status cells are empty:\n` +
-    `${emptyInfo.join("\n")}\n\n` +
-    `Please update them here: ${spreadsheetUrl}\n\n` +
-    `Thanks.`;
-
-  if (teamEmails.length > 0) {
-    MailApp.sendEmail(teamEmails.join(","), subject, body);
-    Logger.log(`Email sent to ${team}`);
-  }
-}
-
-function sendFinalReminderToManagers(team, emptyInfo) {
-  if (!emptyInfo || emptyInfo.length === 0) {
-    Logger.log(`No missing info for ${team}, skipping manager notification.`);
-    return;
-  }
-
-  const spreadsheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
-  const subject = `Final Reminder: ${team} status update missing`;
-
-  const managerList = [
-    { email: "basub6312@gmail.com", name: "Basu" },
-    { email: "viyog32074@bocapies.com", name: "Viyo" },
-  ];
-
-  managerList.forEach((manager) => {
-    const body =
-      `Hi ${manager.name},\n\n` +
-      `The following status updates for the ${team} team are still missing:\n\n` +
-      `${emptyInfo.join("\n")}\n\n` +
-      `Please ensure the status is updated here: ${spreadsheetUrl}\n\n` +
-      `Regards,\nStatus Bot`;
-
-    MailApp.sendEmail(manager.email, subject, body);
-    Logger.log(
-      `Final reminder sent to ${manager.name} (${manager.email}) for ${team}`
-    );
-  });
-}
-
-function getTeamMembers(team) {
-  const teamMembers = {
-    "Platform Services": [
-      "amals@suntechnologies.com",
-      "hrishikeshg@suntechnologies.com",
-      "rankanp@suntechnologies.com",
-    ],
-    "Technodrome - Datadog": [
-      "manojkumar@suntechnologies.com",
-      "ravikumark@suntechnologies.com",
-      "suprajaa@suntechnologies.com",
-    ],
-    Telemetry: [
-      "chandrikah@suntechnologies.com",
-      "bhuvaneshwarib@suntechnologies.com",
-    ],
-    Manual_SDK: [
-      "panchaksariaha@suntechnologies.com",
-      "jayanthlals@suntechnologies.com",
-    ],
-    Cloud_Extension: [
-      "mahammedkh@suntechnologies.com",
-      "vinayn@suntechnologies.com",
-      "prasthuthis@suntechnologies.com",
-    ],
-    SDK_CPP: ["dhirajs@suntechnologies.com"],
-    SDK_Unreal: [
-      "mohammedta@suntechnologies.com",
-      "atulkumar@suntechnologies.com",
-    ],
-    SDK_Unity: ["sayanc@suntechnologies.com", "mohds@suntechnologies.com"],
-    API_Gateway: ["viy1g32074@bocapies.com"],
-    Portal: [
-      "jasaswees@suntechnologies.com",
-      "manasas@suntechnologies.com",
-      "sharanyap@suntechnologies.com",
-    ],
-  };
-
-  return teamMembers[team] || [];
 }
 
 function rollSheetAndSendEmail() {
@@ -149,16 +147,16 @@ function rollSheetAndSendEmail() {
   const sheetName = sheet.getSheetName();
   const fileName = `Weekly Updates ${sheetName}.xlsx`;
 
-  const emptyCellsInfo = checkEmptyCellsForTeams(sheet);
-  if (Object.values(emptyCellsInfo).some((info) => info.length > 0)) {
-    Logger.log("Not all cells are filled. Skipping email and rollover.");
-    return;
-  }
+  // Get sheet structure before creating new sheet
+  const teamConfig = readTeamConfig();
+  const teams = Object.keys(teamConfig).filter((team) => team !== "Manager");
 
+  // Export current sheet
   const tempSS = SpreadsheetApp.create("TEMP-Weekly-Export");
   const copiedSheet = sheet.copyTo(tempSS).setName(sheetName);
   tempSS.deleteSheet(tempSS.getSheets()[0]);
 
+  // Send email with current sheet
   const token = ScriptApp.getOAuthToken();
   const response = UrlFetchApp.fetch(
     `https://www.googleapis.com/drive/v3/files/${tempSS.getId()}/export?mimeType=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`,
@@ -176,16 +174,92 @@ function rollSheetAndSendEmail() {
     attachments: [blob],
   });
 
-  DriveApp.getFileById(tempSS.getId()).setTrashed(true);
-  sheet.hideSheet();
-
+  // Create new sheet with empty cells
   const newSheetName = getNextWeekSheetName();
   const newSheet = sheet.copyTo(ss);
   newSheet.setName(newSheetName);
-  clearDataInSheet(newSheet);
+
+  // Clear ALL content from column B except header
+  const lastRow = newSheet.getLastRow();
+  if (lastRow > 1) {
+    newSheet.getRange(2, 2, lastRow - 1, 1).clearContent();
+  }
+
+  // Cleanup and activate new sheet
+  DriveApp.getFileById(tempSS.getId()).setTrashed(true);
+  sheet.hideSheet();
   ss.setActiveSheet(newSheet);
 
-  Logger.log(`Sheet rolled to "${newSheetName}" and emailed to Pallav.`);
+  Logger.log(`Sheet rolled to "${newSheetName}" with empty status cells`);
+}
+
+function sendEmailToTeam(team, emptyInfo) {
+  const teamMembers = getTeamMembers(team);
+  const spreadsheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
+
+  if (!teamMembers || teamMembers.length === 0) {
+    Logger.log(`No team members found for ${team}`);
+    return;
+  }
+
+  const subject = `Reminder: ${team} team has missing status updates`;
+  const body =
+    `Hi ${team} team,\n\n` +
+    `The following status cells are empty:\n` +
+    `${emptyInfo.join("\n")}\n\n` +
+    `Please update them here: ${spreadsheetUrl}\n\n` +
+    `Thanks.`;
+
+  MailApp.sendEmail(teamMembers.join(","), subject, body);
+  Logger.log(`Email sent to ${team} members: ${teamMembers.join(", ")}`);
+}
+
+function sendFinalReminderToManagers(team, emptyInfo) {
+  if (!emptyInfo || emptyInfo.length === 0) return;
+
+  const managers = getTeamManagers(team);
+  if (managers.length === 0) {
+    Logger.log(`No managers found for team: ${team}`);
+    return;
+  }
+
+  const spreadsheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
+  const subject = `Final Reminder: ${team} status update missing`;
+
+  managers.forEach((managerEmail) => {
+    const body =
+      `Hi Manager,\n\n` +
+      `The following status updates for the ${team} team are still missing:\n\n` +
+      `${emptyInfo.join("\n")}\n\n` +
+      `Please ensure the status is updated here: ${spreadsheetUrl}\n\n` +
+      `Regards,\nStatus Bot`;
+
+    MailApp.sendEmail(managerEmail, subject, body);
+    Logger.log(`Final reminder sent to manager (${managerEmail}) for ${team}`);
+  });
+}
+
+function getTeamMembers(team) {
+  const teamConfig = readTeamConfig();
+  return teamConfig[team]?.members || [];
+}
+
+function getTeamManagers(team) {
+  const teamConfig = readTeamConfig();
+  return teamConfig[team]?.managers || [];
+}
+
+function clearDataInSheet(sheet) {
+  const teamConfig = readTeamConfig();
+  const numTeams = Object.keys(teamConfig).filter(
+    (team) => team !== "Manager"
+  ).length;
+
+  if (numTeams > 0) {
+    sheet.getRange(2, 2, numTeams, 1).clearContent();
+  }
+
+  Logger.log(`Cleared status cells for ${numTeams} teams in new sheet`);
 }
 
 function getNextWeekSheetName() {
@@ -195,31 +269,20 @@ function getNextWeekSheetName() {
   const offset = day === 0 ? 1 : 8 - day;
   nextMonday.setDate(today.getDate() + offset);
 
+  const nextFriday = new Date(nextMonday);
+  nextFriday.setDate(nextMonday.getDate() + 4);
+
   const options = { month: "short", day: "numeric" };
-  const mon = new Date(nextMonday);
-  const fri = new Date(nextMonday);
-  fri.setDate(mon.getDate() + 4);
+  const monStr = nextMonday.toLocaleDateString("en-US", options);
+  const friStr = nextFriday.toLocaleDateString("en-US", options);
 
-  return ` ${mon.toLocaleDateString(
-    "en-US",
-    options
-  )} - ${fri.toLocaleDateString("en-US", options)}`;
-}
-
-function clearDataInSheet(sheet) {
-  const lastRow = sheet.getLastRow();
-  const lastCol = sheet.getLastColumn();
-  for (let row = 2; row <= lastRow; row++) {
-    for (let col = 2; col <= lastCol; col++) {
-      sheet.getRange(row, col).clearContent();
-    }
-  }
+  return `${monStr} - ${friStr}`;
 }
 
 function setupAutomationTriggers() {
-  const triggers = ScriptApp.getProjectTriggers();
-  triggers.forEach((trigger) => ScriptApp.deleteTrigger(trigger));
-  Logger.log(`Deleted ${triggers.length} existing trigger(s).`);
+  ScriptApp.getProjectTriggers().forEach((trigger) =>
+    ScriptApp.deleteTrigger(trigger)
+  );
 
   ScriptApp.newTrigger("checkEmptyCellsAndNotify")
     .timeBased()
@@ -239,96 +302,5 @@ function setupAutomationTriggers() {
     .atHour(22)
     .create();
 
-  SpreadsheetApp.getActiveSpreadsheet().toast(
-    "Automation Setup Complete",
-    "Done",
-    5
-  );
-}
-
-function formatWordStyleList() {
-  const cell = SpreadsheetApp.getActiveSpreadsheet().getActiveCell();
-  const raw = cell.getValue();
-  if (!raw) return;
-
-  const lines = raw
-    .toString()
-    .split("\n")
-    .filter((l) => l.trim() !== "");
-  const bullet1Indent = "      ";
-  const bullet2Indent = "          ";
-  let num = 1;
-  let out = [];
-
-  lines.forEach((line) => {
-    const trimLead = line.replace(/^\s+/, "");
-    let txt;
-
-    if (/^(--|\u25E6)/.test(trimLead)) {
-      txt = trimLead.replace(/^--\s*/, "").replace(/^\u25E6\s*/, "");
-      out.push(`${bullet2Indent}◦ ${txt}`);
-      return;
-    }
-
-    if (/^(-|\u2022)/.test(trimLead)) {
-      txt = trimLead.replace(/^-+\s*/, "").replace(/^\u2022\s*/, "");
-      out.push(`${bullet1Indent}• ${txt}`);
-      return;
-    }
-
-    txt = trimLead.replace(/^\d+\.\s*/, "");
-    out.push(`${num}.  ${txt}`);
-    num++;
-  });
-
-  cell.setValue(out.join("\n"));
-  cell.setWrap(true);
-}
-
-function checkSpellingGrammar() {
-  const ui = SpreadsheetApp.getUi();
-  const cell = SpreadsheetApp.getActiveSpreadsheet().getActiveCell();
-  const txt = cell.getValue();
-  if (!txt) {
-    ui.alert("Cell is empty.");
-    return;
-  }
-
-  const url = "https://api.languagetoolplus.com/v2/check";
-  const resp = UrlFetchApp.fetch(url, {
-    method: "post",
-    payload: {
-      text: txt,
-      language: "en-US",
-    },
-    muteHttpExceptions: true,
-  });
-  const data = JSON.parse(resp.getContentText());
-
-  if (!data.matches || data.matches.length === 0) {
-    ui.alert(
-      "Sakkath chennagide maga 👌\nYenu mistake siglilla 😎\nEnglish-u nim hattira bejar aagutte kano!🫡"
-    );
-    return;
-  }
-
-  let report = "";
-  data.matches.forEach((m) => {
-    const error = txt.substr(m.offset, m.length);
-    const suggest = (m.replacements[0] && m.replacements[0].value) || "‑‑";
-    report += `• ${error} → ${suggest}\n   (${m.message})\n\n`;
-  });
-
-  ui.alert(`Found ${data.matches.length} issue(s):\n\n` + report);
-}
-
-function testFinalReminderNow() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const emptyCellsInfo = checkEmptyCellsForTeams(sheet);
-
-  for (let team in emptyCellsInfo) {
-    if (emptyCellsInfo[team].length > 0) {
-      sendFinalReminderToManagers(team, emptyCellsInfo[team]);
-    }
-  }
+  Logger.log("Automation triggers set up successfully");
 }

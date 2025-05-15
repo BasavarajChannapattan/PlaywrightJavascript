@@ -1,0 +1,11 @@
+{
+  "default": {
+    "paths": ["src/test/features/**/addToCart.feature"],
+    "require": ["src/test/steps/**/*.ts", "src/test/support/hook.ts"],
+    "requireModule": ["ts-node/register"],
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    },
+    "dryRun": false
+  }
+}

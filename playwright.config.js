@@ -40,7 +40,7 @@ export default defineConfig({
     {
       name: "chrome",
       use: {
-        headless: true,
+        headless: false,
         trace: "retain-on-failure",
         timeout: 5000,
         browserName: "chromium",
@@ -51,28 +51,28 @@ export default defineConfig({
         //...devices["iPhone 14"],
       },
     },
-    {
-      name: "firefox",
-      use: {
-        headless: true,
-        trace: "retain-on-failure",
-        timeout: 5000,
-        browserName: "firefox",
-        screenshot: "only-on-failure",
-        ignoreHTTPSErrors: true,
-      },
-    },
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     headless: true,
+    //     trace: "retain-on-failure",
+    //     timeout: 5000,
+    //     browserName: "firefox",
+    //     screenshot: "only-on-failure",
+    //     ignoreHTTPSErrors: true,
+    //   },
+    // },
 
-    {
-      name: "webkit",
-      use: {
-        headless: true,
-        trace: "retain-on-failure",
-        timeout: 5000,
-        browserName: "webkit",
-        screenshot: "only-on-failure",
-        ignoreHTTPSErrors: true,
-      },
-    },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     headless: true,
+    //     trace: "retain-on-failure",
+    //     timeout: 5000,
+    //     browserName: "webkit",
+    //     screenshot: "only-on-failure",
+    //     ignoreHTTPSErrors: true,
+    //   },
+    //}
   ],
 });
