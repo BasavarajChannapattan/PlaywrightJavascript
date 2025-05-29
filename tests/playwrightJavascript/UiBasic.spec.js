@@ -1,4 +1,4 @@
-import { expect, test, page } from "@playwright/test";
+import { expect, test, page, chromium } from "@playwright/test";
 
 test("Browser Context playwright title", async ({ browser }) => {
   const context = await browser.newContext();
@@ -52,7 +52,6 @@ test("Dropdown and check box", async ({ page }) => {
 });
 
 test("@smoke Window handling", async ({ browser }) => {
-  //
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
@@ -88,4 +87,28 @@ test("ScreenShot", async ({ page }) => {
   await page.screenshot({ path: "screenshot1.png", fullPage: true });
   // await page.locator("#password").screenshot({ path: "screenshot.png" });
   await cardtitle.first().screenshot({ path: "screenshot2.png" });
+});
+
+test(" @smoke WindowHandling", async () => {
+  const browser = await chromium.launch({ headless: false });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  await page.goto(
+    "https://www.hyrtutorials.com/p/window-handles-practice.html"
+  );
+
+  const title = await page.title();
+  console.log("Page title is: " + title);
+
+  const [newPage] = await Promise.all([
+    context.waitForEvent("page"),
+    page.locator("#newTabBtn").click(),
+  ]);
+
+  const newPageTitle = await newPage.title();
+  console.log("New page title is: " + newPageTitle);
+  await newPage.bringToFront();
+  await expect(title).toBe("Window Handles Practice - H Y R Tutorials");
+  await browser.close();
 });

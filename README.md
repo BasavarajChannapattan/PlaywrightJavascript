@@ -134,7 +134,7 @@ const page = await context.newPage();-> to launch the new page
        - supports to find multiple elements,it has auto wait more faster
    -> page.$()
 
-                          - no return type, only single element, it doe not have auto wait and very slower
+                             - no return type, only single element, it doe not have auto wait and very slower
 
 6.  How do you handle waiting in Playwright?
     -> waitForSelector-> it's explicit wait it will until element found
@@ -217,5 +217,3 @@ How do you structure a Playwright + Cucumber project?
 How do you handle flaky tests in Playwright?
 How do you implement Page Object Model (POM) in Playwright with Cucumber?
 What are the advantages and disadvantages of using Playwright with Cucumber?
-#   f o r c e   r u n  
- 

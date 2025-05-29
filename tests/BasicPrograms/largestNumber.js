@@ -21,5 +21,3 @@ function threeLargestNumbers() {
 }
 
 console.log(threeLargestNumbers());
-
-Prior;
